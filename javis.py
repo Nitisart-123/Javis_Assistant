@@ -1,3 +1,4 @@
+import random
 import pyttsx3
 import speech_recognition as sr
 import datetime
@@ -114,7 +115,7 @@ def commands(language='th-TH'):
         r.adjust_for_ambient_noise(source, duration=1)  # ปรับระดับเสียงรบกวน 1 วินาที
         # phrase_time_limit จำกัดความยาวสูงสุดของการอัดเสียงต่อ 1 ประโยค (วินาที)
         # ป้องกันไม่ให้พูดหลายรอบต่อเนื่องกันถูกอัดรวมเป็นไฟล์เดียว
-        audio = r.listen(source, phrase_time_limit=6)  # รับเสียงจากไมโครโฟน
+        audio = r.listen(source, phrase_time_limit=10)  # รับเสียงจากไมโครโฟน
 
     try:
         # ใช้ภาษาตามที่กำหนด (ค่าเริ่มต้นคือภาษาไทย)
@@ -133,6 +134,17 @@ def commands(language='th-TH'):
 # ที่อยู่ไฟล์ notepad ที่เก็บตัวเลขตอนของ Kamen Rider Zeztz พากย์ไทย และต้นฉบับญี่ปุ่น
 KR_ZEZTZ_TH_EP = r"C:\Storage_File\My Programming Project\Javis-Python-main\notepad\KR Zeztz TH ver EP.txt"
 KR_ZEZTZ_JP_EP = r"C:\Storage_File\My Programming Project\Javis-Python-main\notepad\KR Zeztz JP ver EP.txt"
+
+# รายการเพลงแบบสุ่ม (YouTube URL) สำหรับคำสั่ง "เปิดเพลงแบบสุ่ม"
+RANDOM_SONGS = [    "https://youtu.be/rX7HNu5HZ-k?si=nLEueWn2JfQRtuNw",
+                    "https://youtu.be/Cx397w2vSh0?si=aQ5vedNY3Es2t_9o",
+                    "https://youtu.be/1K72nmZjJqU?si=2siAMPXJ214bNnSr",
+                    "https://youtu.be/nf4OHIskVBM?si=oUovBIHF2TXO8v5G",
+                    "https://youtu.be/zcxV6z6s35w?si=V3Lfju8JRxbTizaV",
+                    "https://youtu.be/yqpev_CQBIU?si=SFoLC6uQhw_3GlCn",
+                    "https://youtu.be/OZCp_Siln1A?si=Y4ZUX6gkcCc-K-kJ",
+                    "https://youtu.be/wtFbaIdF5Ic?si=Oc4JyCGCS8HMGxqJ",
+                ]
 
 
 def read_ep_number(path):
@@ -284,8 +296,15 @@ if __name__ == "__main__":
                 # ไม่มีคีย์เวิร์ดพิเศษต่อท้าย -> เปิดหน้าแรกของยูทูปตามปกติ
                 speak("กำลังเปิดยูทูปหน้าแรกครับ", lang='th')
                 webbrowser.open("https://www.youtube.com")
-        
 
+
+        # ===== คำสั่งเปิดเพลง =====
+        elif 'เปิดเพลงแบบสุ่ม' in query:
+                song_url = random.choice(RANDOM_SONGS)
+                speak("กำลังสุ่มเปิดเพลงให้ครับ", lang='th')
+                webbrowser.open(song_url)
+
+        # ==== คำสั่งเปิดซีรีส์ Kamen Rider Zeztz ตามตอนล่าสุดที่บันทึกไว้ในไฟล์ notepad ======
         # คำสั่งเปิดซีรีส์ตามตอนที่บันทึกไว้ในไฟล์ notepad
         elif 'เปิดเซ็ตพากย์ไทย' in query or 'เปิด set พากย์ไทย' in query:
             krthverEpNow = read_ep_number(KR_ZEZTZ_TH_EP)
@@ -294,7 +313,6 @@ if __name__ == "__main__":
                 webbrowser.open(f"https://www.youtube.com/results?search_query=kamen rider zeztz {krthverEpNow}")
             else:
                 speak("อ่านตัวเลขตอนจากไฟล์ notepad ไม่สำเร็จครับ กรุณาตรวจสอบไฟล์", lang='th')
-
         # คำสั่งอัพเดตตอนซีรีส์หลังดูจบแล้ว
         elif 'ดูเซ็ตพากย์ไทยจบแล้ว' in query or 'ดู set พากย์ไทยจบแล้ว' in query:
             krthverEpNow = read_ep_number(KR_ZEZTZ_TH_EP)
